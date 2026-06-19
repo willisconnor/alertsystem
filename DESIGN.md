@@ -80,3 +80,4 @@ No error in any layer crashes the process. Validation failures are isolated to t
 - **Single SSE source.** The client connects to one stream URL. Multiple sources would require multiple client instances.
 - **No authentication.** The SSE connection and webhook POST carry no credentials.
 - **Cooldown is in-process only.** Restarting the process resets all cooldown timers, which can cause duplicate alerts for rules that were mid-window.
+- **Documentation** Had this been a larger project, I would have implemented Swagger-style documentation with an OpenAPI.yaml
