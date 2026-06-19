@@ -2,11 +2,13 @@
 
 A configurable, real-time metric alert system that consumes a Server-Sent Events stream, evaluates incoming events against user-defined rules, and delivers alerts through one (CLI) or more notification channels (Webhook).
 
+With the webhook, I utilized webhook.site in order to properly test this. However, webhook.site requires a personal secret in order to use. As per the assignment instructions, this is not allowed, but it helped conceptualize the webhook integration, and stand in for a proof of concept.
+
 ---
 
 ## Use Case
 
-Built for on-call triage on high-traffic services. An engineer monitoring five services during a Black Friday sale shouldn't have to manually scan dashboards. This system sits between the metric stream and the engineer, firing a single alert when a threshold is breached and staying quiet during the cooldown window so the engineer can investigate without being paged 60 times a minute for the same degraded service.
+Putting on my Product hat, this could be built for on-call triage on high-traffic services. An engineer monitoring five services during a Black Friday sale shouldn't have to manually scan dashboards. This system sits between the metric stream and the engineer, firing a single alert when a threshold is breached and staying quiet during the cooldown window so the engineer can investigate without being paged 60 times a minute for the same degraded service.
 
 ---
 
@@ -111,13 +113,11 @@ Rules are defined as a JSON array. Each rule has:
 
 ### Webhook
 
-Set `WEBHOOK_URL` in a `.env` file or your shell before running:
+Run copy .env.example .env to create a local .env with the correct variable name.
 
-```bash
-WEBHOOK_URL=[your value here]... npm run dev
-```
+Visit webhook.site and paste your given key into the WEBHOOK_URL
 
-If `WEBHOOK_URL` is not set, each alert is printed to the console in a mock-delivery format so the system remains fully functional without an external integration.
+If `WEBHOOK_URL` is not set (which, as per assignment instructions, it does not need to be), each alert is printed to the console in a mock-delivery format so the system remains fully functional without an external integration.
 
 ### SSE Stream URL
 
