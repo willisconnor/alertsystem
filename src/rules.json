@@ -1,0 +1,11 @@
+[
+  {
+    "name": "Checkout high error rate",
+    "source": "checkout-api",
+    "metric": "error_rate",
+    "operator": ">",
+    "threshold": 5,
+    "cooldownSeconds": 60,
+    "enabled": true
+  }
+]
