@@ -40,12 +40,5 @@ export async function notify(alert: Alert): Promise<void> {
 }
 
 function mockNotify(alert: Alert): void {
-  console.log("[Notifier] No WEBHOOK_URL set — mock delivery:");
-  console.log(`  Rule Name : ${alert.ruleName}`);
-  console.log(`  Source    : ${alert.source}`);
-  console.log(`  Metric    : ${alert.metric}`);
-  console.log(`  Value     : ${alert.actualValue}`);
-  console.log(`  Condition : ${alert.thresholdCondition}`);
-  console.log(`  Event at  : ${alert.eventTimestamp}`);
-  console.log(`  Alerted at: ${alert.alertTriggeredAt}`);
+  console.log(`[Notifier] No WEBHOOK_URL set — "${alert.ruleName}" logged to console only.`);
 }
