@@ -30,7 +30,7 @@ SSE stream
 
 ## Rule Evaluation Design
 
-Rules are loaded once at module initialisation from `rules.json` and validated at that time — invalid entries are logged and dropped, the rest are kept in a module-scoped array for the process lifetime.
+Rules are loaded once at module initialisation from `rules.json` and validated at that time. Invalid entries are logged and dropped, the rest are kept in a module-scoped array for the process lifetime.
 
 For each incoming event, `evaluate()` iterates the rule array and applies four short-circuit checks in order:
 

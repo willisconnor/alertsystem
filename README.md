@@ -1,12 +1,12 @@
 # Real-Time Alert System
 
-A configurable, real-time metric alert system that consumes a Server-Sent Events stream, evaluates incoming events against user-defined rules, and delivers alerts through one or more notification channels.
+A configurable, real-time metric alert system that consumes a Server-Sent Events stream, evaluates incoming events against user-defined rules, and delivers alerts through one (CLI) or more notification channels (Webhook).
 
 ---
 
 ## Use Case
 
-Built for on-call triage on high-traffic services. An engineer monitoring five services during a Black Friday sale shouldn't have to manually scan dashboards — this system sits between the metric stream and the engineer, firing a single alert when a threshold is breached and staying quiet during the cooldown window so the engineer can investigate without being paged 60 times a minute for the same degraded service.
+Built for on-call triage on high-traffic services. An engineer monitoring five services during a Black Friday sale shouldn't have to manually scan dashboards. This system sits between the metric stream and the engineer, firing a single alert when a threshold is breached and staying quiet during the cooldown window so the engineer can investigate without being paged 60 times a minute for the same degraded service.
 
 ---
 
@@ -17,9 +17,8 @@ Built for on-call triage on high-traffic services. An engineer monitoring five s
 - Rule-based alert evaluation with five operators: `>`, `>=`, `<`, `<=`, `=`
 - Per-rule cooldown window to suppress duplicate alerts
 - Rules support a wildcard source (`""`) to match events from any service
-- In-app alert log (in-memory) with full alert detail
-- Discord webhook delivery via `WEBHOOK_URL` environment variable; falls back to a formatted console mock when unset
-- Strict input validation — malformed JSON, missing fields, and non-numeric values are logged and skipped without crashing
+- Webhook delivery via `WEBHOOK_URL` environment variable; falls back to a formatted console mock when unset
+- Strict input validation; malformed JSON, missing fields, and non-numeric values are logged and skipped without crashing
 
 ---
 
@@ -27,7 +26,7 @@ Built for on-call triage on high-traffic services. An engineer monitoring five s
 
 ```
 src/
-  index.ts          # Entry point — wires SSE client to rule engine and notifiers
+  index.ts          # Entry point
   sse-client.ts     # SSE connection, reconnect backoff, event parsing and validation
   rule-engine.ts    # Loads rules.json, evaluates events, enforces cooldown
   notifier.ts       # Discord webhook delivery (mock fallback when URL not set)
@@ -67,8 +66,6 @@ Start the alert system in another:
 npm run dev
 ```
 
-The mock server emits metric events every second on `http://localhost:4000/events`. The demo rule fires on `checkout-api` `error_rate > 5` with a 60-second cooldown.
-
 ---
 
 ## Configuration
@@ -77,15 +74,15 @@ The mock server emits metric events every second on `http://localhost:4000/event
 
 Rules are defined as a JSON array. Each rule has:
 
-| Field             | Type    | Description                                               |
-|-------------------|---------|-----------------------------------------------------------|
-| `name`            | string  | Human-readable rule label                                 |
-| `source`          | string  | Service name to match. Use `""` to match any source.      |
-| `metric`          | string  | Metric name to match (e.g. `error_rate`, `latency_ms`)    |
-| `operator`        | string  | One of `>`, `>=`, `<`, `<=`, `=`                          |
-| `threshold`       | number  | Value to compare against                                  |
-| `cooldownSeconds` | number  | Minimum seconds between alerts for the same rule          |
-| `enabled`         | boolean | Set to `false` to disable without deleting the rule       |
+| Field             | Type    | Description                                            |
+| ----------------- | ------- | ------------------------------------------------------ |
+| `name`            | string  | Human-readable rule label                              |
+| `source`          | string  | Service name to match. Use `""` to match any source.   |
+| `metric`          | string  | Metric name to match (e.g. `error_rate`, `latency_ms`) |
+| `operator`        | string  | One of `>`, `>=`, `<`, `<=`, `=`                       |
+| `threshold`       | number  | Value to compare against                               |
+| `cooldownSeconds` | number  | Minimum seconds between alerts for the same rule       |
+| `enabled`         | boolean | Set to `false` to disable without deleting the rule    |
 
 **Example:**
 
@@ -112,12 +109,12 @@ Rules are defined as a JSON array. Each rule has:
 ]
 ```
 
-### Discord Webhook
+### Webhook
 
 Set `WEBHOOK_URL` in a `.env` file or your shell before running:
 
 ```bash
-WEBHOOK_URL=https://discord.com/api/webhooks/... npm run dev
+WEBHOOK_URL=[your value here]... npm run dev
 ```
 
 If `WEBHOOK_URL` is not set, each alert is printed to the console in a mock-delivery format so the system remains fully functional without an external integration.
@@ -132,15 +129,15 @@ The default stream URL is `http://localhost:4000/events`. To point at a differen
 
 Each triggered alert contains:
 
-| Field                | Description                                        |
-|----------------------|----------------------------------------------------|
-| `ruleName`           | Name of the rule that fired                        |
-| `source`             | Source service from the event                      |
-| `metric`             | Metric name from the event                         |
-| `actualValue`        | The value that triggered the alert                 |
-| `thresholdCondition` | Human-readable condition (e.g. `error_rate > 5`)   |
-| `eventTimestamp`     | Timestamp from the incoming event                  |
-| `alertTriggeredAt`   | Wall-clock time the alert was generated            |
+| Field                | Description                                      |
+| -------------------- | ------------------------------------------------ |
+| `ruleName`           | Name of the rule that fired                      |
+| `source`             | Source service from the event                    |
+| `metric`             | Metric name from the event                       |
+| `actualValue`        | The value that triggered the alert               |
+| `thresholdCondition` | Human-readable condition (e.g. `error_rate > 5`) |
+| `eventTimestamp`     | Timestamp from the incoming event                |
+| `alertTriggeredAt`   | Wall-clock time the alert was generated          |
 
 ---
 
@@ -152,18 +149,18 @@ npm test
 
 Covers:
 
-- Rule matching — source, metric, operator, threshold, wildcard source, disabled rules
+- Rule matching: source, metric, operator, threshold, wildcard source, disabled rules
 - All five operators at their boundary conditions
-- Cooldown — first fires, second suppressed, fires again after expiry
-- Invalid event handling — malformed JSON, missing fields, non-numeric values
-- SSE state — connected, error/disconnected, and reconnection recovery
+- Cooldown: first fires, second suppressed, fires again after expiry
+- Invalid event handling: malformed JSON, missing fields, non-numeric values
+- SSE state: connected, error/disconnected, and reconnection recovery
 
 ---
 
 ## Scripts
 
-| Command         | Description                      |
-|-----------------|----------------------------------|
-| `npm run dev`   | Run the app with `ts-node`       |
-| `npm run build` | Compile TypeScript to `dist/`    |
-| `npm test`      | Run the Jest test suite          |
+| Command         | Description                   |
+| --------------- | ----------------------------- |
+| `npm run dev`   | Run the app with `ts-node`    |
+| `npm run build` | Compile TypeScript to `dist/` |
+| `npm test`      | Run the Jest test suite       |

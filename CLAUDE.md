@@ -89,7 +89,7 @@ We need to match each incoming event with enabled rules, compare its value with 
 do not trigger an alert on disabled rules
 do not trigger rules for a different metric or source that do not qualify for said rules
 
-Phase 1: in app alert list. Phase 2: discord webhook.
+Phase 1: in app alert list. Phase 2: webhook.
 
 Alert structure:
 
