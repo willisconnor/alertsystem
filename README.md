@@ -119,6 +119,12 @@ Visit webhook.site and paste your given key into the WEBHOOK_URL
 
 If `WEBHOOK_URL` is not set (which, as per assignment instructions, it does not need to be), each alert is printed to the console in a mock-delivery format so the system remains fully functional without an external integration.
 
+Below are images from webhook.site
+<img width="933" height="673" alt="webhooksite1" src="https://github.com/user-attachments/assets/a80e4d06-6c63-4f4e-9b15-2b3568b6b5a6" />
+
+<img width="706" height="772" alt="webhooksite2" src="https://github.com/user-attachments/assets/48520d35-0f4a-468b-8790-96f1c45d3c18" />
+
+
 ### SSE Stream URL
 
 The default stream URL is `http://localhost:4000/events`. To point at a different endpoint, pass the URL as the third argument to `startSSEClient` in `src/index.ts`.
